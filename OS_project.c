@@ -3,17 +3,27 @@
 #include<unistd.h>
 #include<pthread.h>
 #include<semaphore.h>
+pthread_mutex_t read_m;
+pthread_mutex_t write_m;
+sem_t wrt;
+int shared_data=5,read_t_counter=0;
 void *writer(void * args)
 {
 
+	pthread_mutex_lock(&write_m);
+	pthread_mutex_unlock(&write_m);
 	return NULL;
 }
 void *reader(void *args)
 {
+	pthread_mutex_lock(&read_m);
+	pthread_mutex_unlock(&read_m);
 	return NULL;
 }
 int main()
 {
+	pthread_mutex_init(&read_m,0);
+	pthread_mutex_init(&write_m,0);
 	pthread_t thread_wrt[5];
 	pthread_t thread_read[5];
 	int i=0;
