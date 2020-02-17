@@ -17,6 +17,18 @@ void *writer(void * args)
 void *reader(void *args)
 {
 	pthread_mutex_lock(&read_m);
+	read_t_counter++;
+	if(read_t_counter ==1)
+	{
+		pthread_mutex_lock(&write_m);
+		
+	}
+	pthread_mutex_lock(&read_m);
+	read_t_counter=read_t_counter-1;
+	if(read_t_counter ==0)
+	{
+		pthread_mutex_unlock(&write_m);
+	}
 	pthread_mutex_unlock(&read_m);
 	return NULL;
 }
