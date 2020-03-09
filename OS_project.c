@@ -23,7 +23,23 @@ void *reader(void *args)
 		pthread_mutex_lock(&write_m);
 		
 	}
+	pthread_mutex_unlock(&read_m);
+	printf("\nReaders Wating : %d",read_t_counter);
+	int wait_time=rand()%10;
+	sleep(wait_time);
+	printf("\nEnter Number of time you want to read R%d: \n",n);
+	//sleep(1);
+	int read_op;
+	scanf("%d",&read_op);
+	sleep(wait_time);
+	while(read_op>0)
+	{
+	printf("\n%d The value of shared data is: %d\n",read_op,shared_data);
+	read_op--;
+	}
 	pthread_mutex_lock(&read_m);
+	//if(read_t_counter==3)
+	
 	read_t_counter=read_t_counter-1;
 	if(read_t_counter ==0)
 	{
