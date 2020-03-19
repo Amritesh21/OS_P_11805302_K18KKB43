@@ -11,12 +11,29 @@ void *writer(void * args)
 {
 
 	pthread_mutex_lock(&write_m);
+	int n=(int)args;
+	printf("\nWait for few seconds......");
+	sleep(1);
+	printf("\nReaders wating  : %d ",read_t_counter);
+	printf("\nEnter number of times you want to write operation by 'Write Thread' %d: ",(n));
+	int repeat;
+	scanf("%d",&repeat);
+	int i=0;
+	for(i=0;i<repeat;i++)
+	{
+		int tempvar;
+		printf("\nEnter value to be updated: ");
+		scanf("%d",&tempvar);
+		shared_data=tempvar;
+		printf("\nUpdated value is : %d",shared_data);
+	}
 	pthread_mutex_unlock(&write_m);
 	return NULL;
 }
 void *reader(void *args)
 {
 	pthread_mutex_lock(&read_m);
+	int n=(int)args;
 	read_t_counter++;
 	if(read_t_counter ==1)
 	{
