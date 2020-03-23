@@ -69,20 +69,87 @@ int main()
 {
 	pthread_mutex_init(&read_m,0);
 	pthread_mutex_init(&write_m,0);
-	pthread_t thread_wrt[5];
-	pthread_t thread_read[5];
-	int i=0;
+	pthread_t read_th[5];
+	pthread_t write_th[5];
+	int i=0,j=0;
+	int interrupt=3;
+	int interrupt_no=0;
+	int distress=0;
+	//printf("\nEnter the number of interrupt you want: ");
+	//scanf("%d",&interrupt_no);
+	int int_ps[interrupt_no];
+	int k=0,x=0;
+	int beg,mid,end;
+	A:
+	printf("\nEnter number of read interrupt at begning : ");
+	scanf("%d",&beg);
+	printf("\nEnter number of read interrupt at middle : ");
+	scanf("%d",&mid);
+	printf("\nEnter number of read interrupt at end: ");
+	scanf("%d",&end);
+	if((mid+end+beg)!=5)
+	{
+		goto A;
+	}
+	printf("\nWe are at begning of process\n ...Waiting for %d read threads",beg);
+	for(k;k<beg;k++)
+	{
+		
+		pthread_create(&read_th[k],NULL,reader,(int *)k);
+		//pthread_create(&write_th[i],NULL,writer,(int *)i);
+	}
+	for(x;x<beg;x++)
+	{
+		//pthread_join(write_th[j],NULL);
+		pthread_join(read_th[j],NULL);
+	}
+	if(beg==0)
+	{
+		distress=2;
+		beg=2;
+		//printf("******************");
+	}
+	for(i;i<beg;i++)
+	{
+		//pthread_create(&read_th[i],NULL,reader,(int *)i);
+		pthread_create(&write_th[i],NULL,writer,(int *)i);
+	}
+	for(j;j<beg;j++)
+	{
+		pthread_join(write_th[j],NULL);
+		//pthread_join(read_th[j],NULL);
+	}
+	printf("\nWe are at middle of process\n ...Waiting for %d read threads",k);
+	int ctn=1;
+	if(mid ==0|| mid ==5 )
+	{
+		ctn=0;
+	}
+	for(k;k<mid+ctn;k++)
+	{
+		pthread_create(&read_th[k],NULL,reader,(int *)k);
+	}
+	for(x;x<mid+ctn;x++)
+	{
+		pthread_join(read_th[j],NULL);
+	}
 	for(i;i<5;i++)
 	{
-	pthread_create(&thread_wrt[i],NULL,writer,NULL);
-	printf("\n%d ",thread_wrt[i]);
-	pthread_create(&thread_read[i],NULL,reader,NULL);
+		pthread_create(&write_th[i],NULL,writer,(int *)i);
 	}
-	int j=0;
 	for(j;j<5;j++)
 	{
-	pthread_join(thread_wrt[j],NULL);
-	pthread_join(thread_read[j],NULL);
+		pthread_join(write_th[j],NULL);
+	}
+	printf("\nProcess has completed all write operation\n ...Waiting for %d read threads comming at end",end);
+	//x=k;
+	for(k;k<5;k++)
+	{
+		pthread_create(&read_th[k],NULL,reader,(int *)k);
+	}
+	for(x;x<5;x++)
+	{
+		pthread_join(read_th[x],NULL);
 	}
 	return 0;
 }
